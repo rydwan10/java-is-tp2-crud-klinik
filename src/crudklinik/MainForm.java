@@ -10,15 +10,15 @@ package crudklinik;
  */
 public class MainForm extends javax.swing.JFrame {
 
-    private MainFormMethod mainMethod;
+    private final MainFormMethod mainMethod;
     
     /**
      * Creates new form MainForm
      */
     public MainForm() {
         initComponents();
-        mainMethod = new MainFormMethod();
-        mainMethod.init(this);
+        mainMethod = new MainFormMethod(this);
+        
     }
 
     /**
@@ -30,6 +30,7 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jYearChooser1 = new com.toedter.calendar.JYearChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -340,35 +341,35 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jtNamaActionPerformed
 
     private void jbUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbUbahActionPerformed
-        mainMethod.updatePatient(this);
+        mainMethod.updatePatient();
     }//GEN-LAST:event_jbUbahActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        mainMethod.exitApplication(this);
+        mainMethod.exitApplication();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jbSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSimpanActionPerformed
-       mainMethod.savePatient(this);
+       mainMethod.savePatient();
     }//GEN-LAST:event_jbSimpanActionPerformed
 
     private void tbPasienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPasienMouseClicked
-       mainMethod.clickRow(this);
+       mainMethod.clickRow();
     }//GEN-LAST:event_tbPasienMouseClicked
 
     private void jbHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbHapusActionPerformed
-       mainMethod.deletePatient(this);
+       mainMethod.deletePatient();
     }//GEN-LAST:event_jbHapusActionPerformed
 
     private void jbBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBatalActionPerformed
-       mainMethod.cancel(this);
+       mainMethod.cancel();
     }//GEN-LAST:event_jbBatalActionPerformed
 
     private void jbPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbPreviousActionPerformed
-       mainMethod.previousRecord(this);
+       mainMethod.previousRecord();
     }//GEN-LAST:event_jbPreviousActionPerformed
 
     private void jbNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNextActionPerformed
-        mainMethod.nextRecord(this);
+        mainMethod.nextRecord();
     }//GEN-LAST:event_jbNextActionPerformed
 
     /**
@@ -422,6 +423,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private com.toedter.calendar.JYearChooser jYearChooser1;
     public javax.swing.JButton jbBatal;
     public javax.swing.JButton jbHapus;
     public javax.swing.JButton jbNext;

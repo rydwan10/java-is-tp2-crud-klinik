@@ -27,25 +27,25 @@ public class MainFormMethod {
     private boolean isEdit = false;
     private Patient selectedEditPatient;
     private int currentIndex = -1;
+    private MainForm form;
     
-    
-    
-    private void setIsEdit(boolean val) {
-        this.isEdit = val;
-    }
-    
-    private void setEditPatient(Patient val) {
-        this.selectedEditPatient = val;
-    }
-    
-    public void init(MainForm form) {
-        createTable(form);
+    public MainFormMethod(MainForm form) {
+        this.form = form;
+        createTable();
         form.jtNama.setDocument(new JTextFieldLimit(20));
         form.jtNIK.setDocument(new NumericDocument());
         form.jtAlamat.setDocument(new JTextFieldLimit(50));
         form.jtTanggalLahir.setDocument(new JTextFieldLimit(10));
         form.jbHapus.setEnabled(false);
         form.jbUbah.setEnabled(false);
+    }
+    
+     private void setIsEdit(boolean val) {
+        this.isEdit = val;
+    }
+    
+    private void setEditPatient(Patient val) {
+        this.selectedEditPatient = val;
     }
     
     private static class NumericDocument extends PlainDocument {
@@ -82,14 +82,14 @@ public class MainFormMethod {
           }
     }
     
-    private void populateRecordToForm(MainForm form){
-            form.jtNama.setText(form.tbPasien.getModel().getValueAt(currentIndex, 2).toString());
-            form.jtNIK.setText(form.tbPasien.getModel().getValueAt(currentIndex, 3).toString());
-            form.jtTanggalLahir.setText(parseFromHumanReadbleDateToISO(form.tbPasien.getModel().getValueAt(currentIndex, 4).toString()));
-            form.jtAlamat.setText(form.tbPasien.getModel().getValueAt(currentIndex, 5).toString());
-            
-            onEdit(form);
-            setEditPatient(patientList.get(currentIndex));
+    private void populateRecordToForm(){
+        form.jtNama.setText(form.tbPasien.getModel().getValueAt(currentIndex, 2).toString());
+        form.jtNIK.setText(form.tbPasien.getModel().getValueAt(currentIndex, 3).toString());
+        form.jtTanggalLahir.setText(parseFromHumanReadbleDateToISO(form.tbPasien.getModel().getValueAt(currentIndex, 4).toString()));
+        form.jtAlamat.setText(form.tbPasien.getModel().getValueAt(currentIndex, 5).toString());
+
+        onEdit(form);
+        setEditPatient(patientList.get(currentIndex));
     }
     
     private void onEdit(MainForm form) {
@@ -99,25 +99,25 @@ public class MainFormMethod {
         setIsEdit(true);
     }
     
-    public void previousRecord(MainForm form) {
+    public void previousRecord() {
         
         if (currentIndex > 0) {
             currentIndex--;
-            populateRecordToForm(form);
-            highlightCurrentRow(form);
+            populateRecordToForm();
+            highlightCurrentRow();
 
         }
     }
     
-    public void nextRecord(MainForm form) {
+    public void nextRecord() {
         if (currentIndex < patientList.size() - 1) {
             currentIndex++;
-            populateRecordToForm(form);
-            highlightCurrentRow(form);
+            populateRecordToForm();
+            highlightCurrentRow();
         }
     }
     
-    private void highlightCurrentRow(MainForm form) {
+    private void highlightCurrentRow() {
         int rowIndex = currentIndex;
         form.tbPasien.clearSelection();
         form.tbPasien.setRowSelectionInterval(rowIndex, rowIndex);
@@ -126,7 +126,7 @@ public class MainFormMethod {
     }
     
     
-    public void createTable(MainForm form) {
+    public void createTable() {
 //        patientList.add(new Patient(1, "John Doe", "123456789", "1990-05-15", "123 Main St"));
 //        patientList.add(new Patient(2, "Jane Smith", "987654321", "1985-08-20", "456 Oak St"));
 
@@ -154,11 +154,11 @@ public class MainFormMethod {
         form.tbPasien.setModel(table);
     }
     
-    public void refreshTable(MainForm form) {
-        createTable(form);
+    public void refreshTable() {
+        createTable();
     }
     
-    public void exitApplication(MainForm form) {
+    public void exitApplication() {
         int confirmed = JOptionPane.showConfirmDialog(form,
                 "Keluar dari aplikasi?", "Konfirmasi Keluar",
                 JOptionPane.YES_NO_OPTION);
@@ -168,9 +168,9 @@ public class MainFormMethod {
         }
     }
     
-    public void updatePatient(MainForm form) {
-        if(isFormValid(form)) {
-            if(showConfirmDialog(form, "Konfirmasi ubah data", "Update pasien ini?")) {
+    public void updatePatient() {
+        if(isFormValid()) {
+            if(showConfirmDialog("Konfirmasi ubah data", "Update pasien ini?")) {
                 int row = form.tbPasien.getSelectedRow();
                 if(row != -1) {
                   Patient selectedPatient = patientList.get(row);
@@ -179,16 +179,16 @@ public class MainFormMethod {
                   selectedPatient.setTanggalLahir(form.jtTanggalLahir.getText().trim());
                   selectedPatient.setAlamat(form.jtAlamat.getText().trim());
                   
-                  refreshTable(form);
-                  cancel(form);
+                  refreshTable();
+                  cancel();
                   showSuccessDialog(form, "Informasi", "Sukses ubah data pasien");
                 } 
             }
         }
     }
     
-    public void savePatient(MainForm form) {
-        if(isFormValid(form)) {
+    public void savePatient() {
+        if(isFormValid()) {
             Patient newPatient = new Patient();
             newPatient.setId(generateId());
             newPatient.setNamaPasien(form.jtNama.getText().trim());
@@ -197,8 +197,8 @@ public class MainFormMethod {
             newPatient.setAlamat(form.jtAlamat.getText().trim());
 
             patientList.add(newPatient);
-            refreshTable(form);
-            clearForm(form);
+            refreshTable();
+            clearForm();
             showSuccessDialog(form, "Information", "Sukses input pasien baru");
         }
     }
@@ -208,19 +208,19 @@ public class MainFormMethod {
         return patientList.get(patientList.size() - 1).getId() + 1;
     }
     
-    public void deletePatient(MainForm form) {
-        if(showConfirmDialog(form, "Konfirmasi hapus data", "Hapus pasien ini?")) {
+    public void deletePatient() {
+        if(showConfirmDialog("Konfirmasi hapus data", "Hapus pasien ini?")) {
                 int row = form.tbPasien.getSelectedRow();
                 if(row != -1) {
                   patientList.remove(row); 
-                  refreshTable(form);
-                  cancel(form);
+                  refreshTable();
+                  cancel();
                   showSuccessDialog(form, "Informasi", "Sukses hapus data pasien");
                 } 
             }
     }
     
-    public void clickRow(MainForm form) {
+    public void clickRow() {
         try {
             int row = form.tbPasien.getSelectedRow();
             form.jtNama.setText(form.tbPasien.getModel().getValueAt(row, 2).toString());
@@ -235,8 +235,8 @@ public class MainFormMethod {
         }
     }
     
-    public void cancel(MainForm form) {
-        clearForm(form);
+    public void cancel() {
+        clearForm();
         selectedEditPatient = null;
         currentIndex = -1;
         form.jbSimpan.setEnabled(true);
@@ -246,14 +246,14 @@ public class MainFormMethod {
         setIsEdit(false);
     }
     
-    public void clearForm(MainForm form) {
+    public void clearForm() {
         form.jtNama.setText(null);
         form.jtNIK.setText(null);
         form.jtTanggalLahir.setText(null);
         form.jtAlamat.setText(null);
     }
     
-    public boolean showConfirmDialog(MainForm form, String title, String message) {
+    public boolean showConfirmDialog(String title, String message) {
         int confirmed = JOptionPane.showConfirmDialog(form,
                 message, title,
                 JOptionPane.YES_NO_OPTION);
@@ -261,7 +261,7 @@ public class MainFormMethod {
         return confirmed == JOptionPane.YES_OPTION;
     }
     
-    public boolean isFormValid(MainForm form) {
+    public boolean isFormValid() {
         String message = "";
         
         if (form.jtNama.getText().isBlank()) {
